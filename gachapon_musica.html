@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pixel Music Box 🎵</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 25px 15px;
+
+            background: #f0e4dc;
+
+            font-family: 'VT323', monospace;
+            color: #302936;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            image-rendering: pixelated;
+        }
+
+        /* =========================
+           TITOLO
+        ========================= */
+
+        h1 {
+            margin: 0 0 5px;
+
+            font-family: 'Press Start 2P', monospace;
+            font-size: 22px;
+            line-height: 1.5;
+
+            text-align: center;
+
+            color: #302936;
+
+            text-shadow: 3px 3px 0 #c8b7d4;
+        }
+
+        .subtitle {
+            margin: 5px 0 18px;
+
+            font-size: 20px;
+            text-align: center;
+
+            color: #695c6d;
+        }
+
+        /* =========================
+           CARD
+        ========================= */
+
+        .card-app {
+            width: min(470px, 95vw);
+
+            background: #fff4e8;
+
+            border: 4px solid #302936;
+            border-radius: 10px;
+
+            padding: 22px;
+
+            box-shadow: 7px 7px 0 #302936;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* =========================
+           CONTATORE
+        ========================= */
+
+        .progress {
+            align-self: flex-end;
+
+            margin-bottom: 10px;
+
+            padding: 5px 9px;
+
+            background: #302936;
+            color: #fff4e8;
+
+            border-radius: 4px;
+
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+        }
+
+        /* =========================
+           JUKEBOX
+        ========================= */
+
+        .jukebox {
+            width: 320px;
+            max-width: 100%;
+
+            background: #e5a06f;
+
+            border: 5px solid #302936;
+            border-radius: 22px 22px 10px 10px;
+
+            padding: 14px;
+
+            box-shadow:
+                inset 0 0 0 4px #f2c08f,
+                5px 5px 0 #302936;
+        }
+
+        .jukebox-top {
+            height: 38px;
+
+            margin-bottom: 10px;
+
+            background: #9b82ad;
+
+            border-radius: 12px 12px 5px 5px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #fff4e8;
+
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* =========================
+           FINESTRA DEL DISCO
+        ========================= */
+
+        .jukebox-window {
+            height: 210px;
+
+            position: relative;
+
+            overflow: hidden;
+
+            background: #c8b7d4;
+
+            border: 5px solid #302936;
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* lucina decorativa */
+
+        .window-light {
+            position: absolute;
+
+            top: 12px;
+            left: 12px;
+
+            width: 8px;
+            height: 8px;
+
+            background: #f2c08f;
+
+            border: 2px solid #302936;
+
+            box-shadow:
+                16px 0 #f2c08f,
+                32px 0 #f2c08f;
+        }
+
+        /* =========================
+           GIRADISCHI
+        ========================= */
+
+        .turntable {
+            width: 160px;
+            height: 160px;
+
+            position: relative;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .disc {
+            width: 145px;
+            height: 145px;
+
+            position: absolute;
+
+            border-radius: 50%;
+
+            background:
+                repeating-radial-gradient(
+                    circle,
+                    #17131a 0px,
+                    #17131a 3px,
+                    #29232c 4px,
+                    #17131a 6px
+                );
+
+            border: 4px solid #302936;
+
+            box-shadow:
+                4px 4px 0 #302936;
+
+            transition: transform 0.2s;
+        }
+
+        .disc::before {
+            content: '';
+
+            position: absolute;
+
+            width: 45px;
+            height: 45px;
+
+            left: 50%;
+            top: 50%;
+
+            transform: translate(-50%, -50%);
+
+            border-radius: 50%;
+
+            background: #e5a06f;
+
+            border: 4px solid #302936;
+        }
+
+        .disc::after {
+            content: '';
+
+            position: absolute;
+
+            width: 8px;
+            height: 8px;
+
+            left: 50%;
+            top: 50%;
+
+            transform: translate(-50%, -50%);
+
+            border-radius: 50%;
+
+            background: #302936;
+        }
+
+        .disc.gira {
+            animation: giraDisco 2s linear infinite;
+        }
+
+        @keyframes giraDisco {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================
+           GATTINO PIXEL
+        ========================= */
+
+        .cat-orbit {
+            position: absolute;
+
+            width: 118px;
+            height: 118px;
+
+            left: 50%;
+            top: 50%;
+
+            margin-left: -59px;
+            margin-top: -59px;
+
+            z-index: 6;
+
+            display: none;
+        }
+
+        .cat-orbit.corri {
+            display: block;
+            animation: orbitCat 5s linear infinite;
+        }
+
+        /* Punto di partenza del gatto sull'orbita */
+
+        .cat-position {
+            position: absolute;
+
+            left: 50%;
+            top: 50%;
+
+            width: 0;
+            height: 0;
+        }
+
+        /* =========================
+           CORPO DEL GATTINO
+        ========================= */
+
+        .pixel-cat {
+            position: absolute;
+            left: 52px;
+            top: -19px;
+            width: 42px;
+            height: 38px;
+
+            filter:
+                drop-shadow(2px 0 0 white)
+                drop-shadow(-2px 0 0 white)
+                drop-shadow(0 2px 0 white)
+                drop-shadow(0 -2px 0 white)
+                drop-shadow(3px 3px 0 #302936);
+        }
+
+        /* TESTA */
+
+        .cat-head {
+            position: absolute;
+
+            left: 7px;
+            top: 1px;
+
+            width: 27px;
+            height: 23px;
+
+            background: #17131a;
+
+            border: 3px solid #302936;
+        }
+
+        /* ORECCHIE */
+
+        .cat-ear {
+            position: absolute;
+
+            width: 9px;
+            height: 9px;
+
+            background: #17131a;
+
+            border-top: 3px solid #302936;
+            border-left: 3px solid #302936;
+        }
+
+        .cat-ear-left {
+            left: 6px;
+            top: -5px;
+
+            transform: skewY(-25deg);
+        }
+
+        .cat-ear-right {
+            right: 6px;
+            top: -5px;
+
+            transform: skewY(25deg);
+        }
+
+        /* OCCHI */
+
+        .cat-eye {
+            position: absolute;
+
+            width: 4px;
+            height: 4px;
+
+            background: #fff4e8;
+
+            top: 9px;
+        }
+
+        .cat-eye-left {
+            left: 6px;
+        }
+
+        .cat-eye-right {
+            right: 6px;
+        }
+
+        /* NASINO */
+
+        .cat-nose {
+            position: absolute;
+
+            width: 3px;
+            height: 3px;
+
+            background: #e5a06f;
+
+            left: 12px;
+            top: 15px;
+        }
+
+        /* CORPO */
+
+        .cat-body {
+            position: absolute;
+
+            left: 12px;
+            top: 22px;
+
+            width: 24px;
+            height: 14px;
+
+            background: #17131a;
+
+            border: 3px solid #302936;
+        }
+
+        /* CODA */
+
+        .cat-tail {
+            position: absolute;
+
+            left: 31px;
+            top: 20px;
+
+            width: 13px;
+            height: 14px;
+
+            border-top: 4px solid #17131a;
+            border-right: 4px solid #17131a;
+
+            transform: rotate(8deg);
+        }
+
+        /* ZAMPINE */
+
+        .cat-paw {
+            position: absolute;
+
+            width: 8px;
+            height: 5px;
+
+            background: #17131a;
+        }
+
+        .cat-paw-left {
+            left: 12px;
+            top: 33px;
+        }
+
+        .cat-paw-right {
+            left: 27px;
+            top: 33px;
+        }
+
+        /* =========================
+           MOVIMENTO CIRCOLARE
+        ========================= */
+
+        @keyframes orbitCat {
+
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+
+        }
+
+        /* =========================
+           CONTROLLI JUKEBOX
+        ========================= */
+
+        .jukebox-controls {
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            margin-top: 12px;
+        }
+
+        .speaker {
+            width: 34px;
+            height: 28px;
+
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    #302936 0px,
+                    #302936 3px,
+                    transparent 3px,
+                    transparent 6px
+                );
+
+            border: 3px solid #302936;
+            border-radius: 4px;
+        }
+
+        /* =========================
+           PULSANTE PLAY / STOP
+        ========================= */
+
+        .play-button {
+            min-width: 145px;
+
+            padding: 13px 18px;
+
+            border: 4px solid #302936;
+            border-radius: 7px;
+
+            background: #9b82ad;
+            color: #fff4e8;
+
+            font-family: 'Press Start 2P', monospace;
+            font-size: 13px;
+
+            cursor: pointer;
+
+            box-shadow: 4px 4px 0 #302936;
+
+            transition:
+                transform 0.1s,
+                background 0.1s;
+        }
+
+        .play-button:hover {
+            background: #80698f;
+        }
+
+        .play-button:active {
+            transform: translate(3px, 3px);
+            box-shadow: 1px 1px 0 #302936;
+        }
+
+        /* =========================
+           STATO
+        ========================= */
+
+        .status {
+            min-height: 27px;
+
+            margin-top: 12px;
+
+            font-size: 20px;
+
+            text-align: center;
+
+            color: #695c6d;
+        }
+
+        /* =========================
+           AREA GIOCO
+        ========================= */
+
+        .game-area {
+            width: 100%;
+
+            margin-top: 17px;
+
+            padding-top: 15px;
+
+            border-top: 3px dashed #b79dbd;
+
+            display: none;
+
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .game-area.mostra {
+            display: flex;
+        }
+
+        .question {
+            margin: 0 0 12px;
+
+            font-size: 24px;
+
+            text-align: center;
+        }
+
+        .input-box {
+            width: 100%;
+
+            margin-bottom: 9px;
+
+            padding: 10px;
+
+            background: #fffaf3;
+
+            border: 3px solid #302936;
+            border-radius: 5px;
+
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+
+            color: #302936;
+
+            outline: none;
+        }
+
+        .input-box:focus {
+            box-shadow: 3px 3px 0 #e5a06f;
+        }
+
+        .input-label {
+            align-self: flex-start;
+
+            margin-left: 3px;
+            margin-bottom: 3px;
+
+            font-size: 17px;
+        }
+
+        /* =========================
+           BOTTONI
+        ========================= */
+
+        .btn {
+            margin-top: 8px;
+
+            padding: 9px 16px;
+
+            border: 3px solid #302936;
+            border-radius: 5px;
+
+            background: #9b82ad;
+            color: #fff4e8;
+
+            font-family: 'VT323', monospace;
+            font-size: 21px;
+
+            cursor: pointer;
+
+            box-shadow: 3px 3px 0 #e5a06f;
+        }
+
+        .btn:hover {
+            background: #80698f;
+        }
+
+        .btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 #e5a06f;
+        }
+
+        /* =========================
+           RISPOSTA
+        ========================= */
+
+        .reveal-box {
+            width: 100%;
+
+            margin-top: 17px;
+
+            padding: 15px;
+
+            background: #c8b7d4;
+
+            border: 3px solid #302936;
+            border-radius: 6px;
+
+            text-align: center;
+
+            display: none;
+        }
+
+        .reveal-box.mostra {
+            display: block;
+        }
+
+        .reveal-title {
+            margin-bottom: 5px;
+
+            font-family: 'Press Start 2P', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .correct {
+            margin: 8px 0;
+
+            font-size: 21px;
+        }
+
+        .answer {
+            margin-top: 10px;
+
+            padding: 9px;
+
+            background: #fff4e8;
+
+            border: 2px solid #302936;
+            border-radius: 4px;
+
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .score-message {
+            margin-top: 10px;
+
+            font-size: 20px;
+
+            line-height: 1.2;
+        }
+
+        /* =========================
+           FINALE
+        ========================= */
+
+        .finale {
+            width: 100%;
+
+            margin-top: 15px;
+
+            padding: 20px;
+
+            background: #c8b7d4;
+
+            border: 4px solid #302936;
+            border-radius: 8px;
+
+            box-shadow: 4px 4px 0 #302936;
+
+            text-align: center;
+
+            display: none;
+        }
+
+        .finale.mostra {
+            display: block;
+        }
+
+        .finale h2 {
+            margin-top: 0;
+
+            font-family: 'Press Start 2P', monospace;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .final-message {
+            font-size: 23px;
+            line-height: 1.35;
+            white-space: pre-line;
+        }
+
+        /* =========================
+           AUDIO
+        ========================= */
+
+        .audio-container {
+            width: 100%;
+
+            margin-top: 12px;
+
+            display: none;
+        }
+
+        audio {
+            width: 100%;
+            height: 38px;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+            margin-top: 18px;
+
+            font-size: 16px;
+
+            color: #695c6d;
+
+            text-align: center;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 450px) {
+
+            body {
+                padding: 15px 8px;
+            }
+
+            .card-app {
+                padding: 15px;
+            }
+
+            .jukebox {
+                width: 285px;
+            }
+
+            h1 {
+                font-size: 17px;
+            }
+
+            .subtitle {
+                font-size: 18px;
+            }
+
+            .play-button {
+                min-width: 125px;
+                font-size: 11px;
+                padding: 12px 10px;
+            }
+
+            .speaker {
+                width: 27px;
+                height: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card-app">
+
+        <div class="progress" id="progress">
+            00 / 14
+        </div>
+
+        <h1>PIXEL MUSIC BOX</h1>
+
+        <p class="subtitle">
+            Premi PLAY, ascolta e indovina 🎵
+        </p>
+
+
+        <!-- =========================
+             JUKEBOX
+        ========================= -->
+
+        <div class="jukebox">
+
+            <div class="jukebox-top">
+                ★ MUSIC BOX ★
+            </div>
+
+            <div class="jukebox-window">
+
+                <div class="window-light"></div>
+
+                <div class="turntable">
+
+                    <div class="disc" id="disco"></div>
+
+                    <div class="cat-orbit" id="cat-orbit">
+
+                        <div class="cat-position">
+
+                            <div class="pixel-cat" id="pixel-cat">
+
+                                <div class="cat-head">
+
+                                    <div class="cat-ear cat-ear-left"></div>
+                                    <div class="cat-ear cat-ear-right"></div>
+
+                                    <span class="cat-eye cat-eye-left"></span>
+                                    <span class="cat-eye cat-eye-right"></span>
+
+                                    <span class="cat-nose"></span>
+
+                                </div>
+
+                                <div class="cat-body"></div>
+
+                                <div class="cat-tail"></div>
+
+                                <div class="cat-paw cat-paw-left"></div>
+                                <div class="cat-paw cat-paw-right"></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="jukebox-controls">
+
+                <div class="speaker"></div>
+
+                <button
+                    class="play-button"
+                    id="play-button"
+                    onclick="togglePlayStop()"
+                    title="Riproduci o ferma la canzone"
+                >
+                    ▶ PLAY
+                </button>
+
+                <div class="speaker"></div>
+
+            </div>
+
+        </div>
+
+
+        <div class="status" id="status">
+            Premi PLAY per iniziare!
+        </div>
+
+
+        <!-- AUDIO -->
+
+        <div class="audio-container" id="audio-container">
+
+            <audio
+                id="audio"
+                controls
+            >
+                Il tuo browser non supporta l'audio.
+            </audio>
+
+        </div>
+
+
+        <!-- =========================
+             AREA INDOVINA
+        ========================= -->
+
+        <div class="game-area" id="game-area">
+
+            <p class="question">
+                🎧 Che canzone è?
+            </p>
+
+            <div class="input-label">
+                Titolo
+            </div>
+
+            <input
+                class="input-box"
+                id="title-input"
+                type="text"
+                placeholder="Scrivi il titolo..."
+                autocomplete="off"
+            >
+
+            <div class="input-label">
+                Artista
+            </div>
+
+            <input
+                class="input-box"
+                id="artist-input"
+                type="text"
+                placeholder="Scrivi l'artista..."
+                autocomplete="off"
+            >
+
+            <button
+                class="btn"
+                id="confirm-button"
+                onclick="checkAnswer()"
+            >
+                CONFERMA ✨
+            </button>
+
+        </div>
+
+
+        <!-- =========================
+             RISPOSTA
+        ========================= -->
+
+        <div
+            class="reveal-box"
+            id="reveal-box"
+        >
+
+            <div class="reveal-title">
+                ✨ LA RISPOSTA ERA... ✨
+            </div>
+
+            <div
+                class="correct"
+                id="correct-result"
+            ></div>
+
+            <div
+                class="answer"
+                id="correct-answer"
+            ></div>
+
+            <div
+                class="score-message"
+                id="score-message"
+            ></div>
+
+            <button
+                class="btn"
+                id="next-button"
+                onclick="nextSong()"
+            >
+                PROSSIMA CANZONE 🎵
+            </button>
+
+        </div>
+
+
+        <!-- =========================
+             FINALE
+        ========================= -->
+
+        <div
+            class="finale"
+            id="finale"
+        >
+
+            <h2>
+                🎉 FINE DELLA MUSIC BOX 🎉
+            </h2>
+
+            <div
+                class="final-message"
+                id="final-message"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer">
+        Fatto con amore dalla tua migliore amica 🐈‍⬛
+    </div>
+
+
+    <script>
+
+        /* =====================================================
+           PLAYLIST
+        ===================================================== */
+
+        const playlist = [
+
+            {
+                title: "21 Guns",
+                artist: "Green Day",
+                file: "music/21_Guns_KLICKAUD.mp3"
+            },
+
+            {
+                title: "Rolling in the Deep",
+                artist: "Adele",
+                file: "music/Adele_rolling_in_the_deep_KLICKAUD.mp3"
+            },
+
+            {
+                title: "Bones",
+                artist: "Imagine Dragons",
+                file: "music/Bones_KLICKAUD.mp3"
+            },
+
+            {
+                title: "Boulevard of Broken Dreams",
+                artist: "Green Day",
+                file: "music/Boulevard_of_Broken_Dreams_KLICKAUD.mp3"
+            },
+
+            {
+                title: "Do I Wanna Know?",
+                artist: "Arctic Monkeys",
+                file: "music/Do_I_Wanna_Know_KLICKAUD.mp3"
+            },
+
+            {
+                title: "Don't Look Back in Anger",
+                artist: "Oasis",
+                file: "music/Don_t_Look_Back_In_Anger_KLICKAUD.mp3"
+            },
+
+            {
+                title: "Hey There Delilah",
+                artist: "Plain White T's",
+                file: "music/Hey_There_Delilah_KLICKAUD.mp3"
+            },
+
+            {
+                title: "I Lived",
+                artist: "OneRepublic",
+                file: "music/I_Lived_KLICKAUD.mp3"
+            },
+
+            {
+                title: "Smells Like Teen Spirit",
+                artist: "Nirvana",
+                file: "music/Smell_Like_Teen_Spirit_KLICKAUD.mp3"
+            },
+
+            {
+                title: "Stop The Wedding!",
+                artist: "Ashe",
+                file: "music/Stop_The_Wedding_KLICKAUD.mp3"
+            },
+
+            {
+                title: "Shattered",
+                artist: "Trading Yesterday",
+                file: "music/Trading_Yesterday_Shattered_KLICKAUD.mp3"
+            },
+
+            {
+                title: "We Are Young",
+                artist: "fun. feat. Janelle Monáe",
+                file: "music/We_Are_Young_feat_Janelle_Monáe_KLICKAUD.mp3"
+            },
+
+            {
+                title: "Wonderwall",
+                artist: "Oasis",
+                file: "music/Wonderwall_KLICKAUD.mp3"
+            },
+
+            {
+                title: "Zombie",
+                artist: "The Cranberries",
+                file: "music/Zombie_KLICKAUD.mp3"
+            }
+
+        ];
+
+
+        /* =====================================================
+           MESSAGGIO FINALE
+
+           ✏️ SCRIVI QUI IL TUO MESSAGGIO
+        ===================================================== */
+
+        const messaggioFinale = `
+
+Hai ascoltato tutte e 14 le canzoni. 💙
+
+Sei arrivata alla fine, ma non significa che questa sia la tua fine.
+
+Ogni volta che avrai bisogno, io ci sarò, con un gatto o dieci.
+
+Ma nulla cambierà mai il fatto che tu ci sia sempre per me,
+e io ci sarò sempre per te.
+`;
+
+
+        /* =====================================================
+           VARIABILI DEL GIOCO
+        ===================================================== */
+
+        let canzoniGiaUscite = [];
+
+        let canzoneCorrente = null;
+
+        let numeroCanzone = 0;
+
+        let punti = 0;
+
+
+        /* =====================================================
+           ELEMENTI HTML
+        ===================================================== */
+
+        const audio = document.getElementById("audio");
+
+        const disco = document.getElementById("disco");
+
+        const gatto = document.getElementById("cat-orbit");
+
+        const gameArea = document.getElementById("game-area");
+
+        const revealBox = document.getElementById("reveal-box");
+
+        const finale = document.getElementById("finale");
+
+        const progress = document.getElementById("progress");
+
+        const status = document.getElementById("status");
+
+        const playButton = document.getElementById("play-button");
+
+
+        /* =====================================================
+           NORMALIZZAZIONE RISPOSTE
+        ===================================================== */
+
+        function normalizza(testo) {
+
+            return testo
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^\w\s]/g, "")
+                .replace(/\s+/g, " ")
+                .trim();
+
+        }
+
+
+        /* =====================================================
+           PRENDI UNA CANZONE NON ANCORA USATA
+        ===================================================== */
+
+        function scegliCanzone() {
+
+            const disponibili = playlist.filter(
+                (_, indice) => !canzoniGiaUscite.includes(indice)
+            );
+
+            if (disponibili.length === 0) {
+                return null;
+            }
+
+            const scelta =
+                Math.floor(Math.random() * disponibili.length);
+
+            const canzone = disponibili[scelta];
+
+            const indiceOriginale =
+                playlist.indexOf(canzone);
+
+            canzoniGiaUscite.push(indiceOriginale);
+
+            return canzone;
+        }
+
+
+        /* =====================================================
+           PLAY
+        ===================================================== */
+
+        function startSong() {
+
+            /* Se è già stata caricata una canzone,
+               non ne carichiamo un'altra */
+
+            if (canzoneCorrente !== null) {
+
+                audio.play().catch(() => {});
+
+                disco.classList.add("gira");
+                gatto.classList.add("corri");
+
+                playButton.textContent = "■ STOP";
+
+                playButton.title = "Ferma la canzone";
+
+                status.textContent =
+                    "🎵 La canzone sta suonando...";
+
+                return;
+            }
+
+
+            canzoneCorrente = scegliCanzone();
+
+            if (!canzoneCorrente) {
+                return;
+            }
+
+
+            numeroCanzone++;
+
+            progress.textContent =
+                String(numeroCanzone).padStart(2, "0") + " / 14";
+
+
+            /* carica la canzone */
+
+            audio.src = canzoneCorrente.file;
+
+            audio.load();
+
+
+            /* avvia il disco */
+
+            disco.classList.add("gira");
+
+            gatto.classList.add("corri");
+
+
+            playButton.textContent = "■ STOP";
+
+            playButton.title = "Ferma la canzone";
+
+
+            status.textContent =
+                "🎵 Ascolta bene... quale sarà?";
+
+
+            /* mostra audio */
+
+            document
+                .getElementById("audio-container")
+                .style.display = "block";
+
+
+            /* mostra area risposta */
+
+            gameArea.classList.add("mostra");
+
+            revealBox.classList.remove("mostra");
+
+
+            /* pulisce i campi */
+
+            document.getElementById("title-input").value = "";
+
+            document.getElementById("artist-input").value = "";
+
+
+            /* prova a partire */
+
+            audio.play().catch(() => {
+
+                status.textContent =
+                    "🎵 Premi PLAY sul lettore per ascoltare!";
+
+            });
+
+        }
+
+
+        /* =====================================================
+           PLAY / STOP
+        ===================================================== */
+
+        function togglePlayStop() {
+
+            if (!canzoneCorrente) {
+
+                startSong();
+
+                return;
+            }
+
+
+            if (audio.paused) {
+
+                audio.play().catch(() => {});
+
+                disco.classList.add("gira");
+                gatto.classList.add("corri");
+
+                playButton.textContent = "■ STOP";
+
+                playButton.title = "Ferma la canzone";
+
+                status.textContent =
+                    "🎵 La canzone sta suonando...";
+
+            } else {
+
+                audio.pause();
+
+                disco.classList.remove("gira");
+                gatto.classList.remove("corri");
+
+                playButton.textContent = "▶ PLAY";
+
+                playButton.title = "Riproduci la canzone";
+
+                status.textContent =
+                    "⏸️ Canzone in pausa.";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           CONFERMA RISPOSTA
+        ===================================================== */
+
+        function checkAnswer() {
+
+            if (!canzoneCorrente) {
+                return;
+            }
+
+
+            const titoloInserito =
+                normalizza(
+                    document.getElementById("title-input").value
+                );
+
+
+            const artistaInserito =
+                normalizza(
+                    document.getElementById("artist-input").value
+                );
+
+
+            const titoloCorretto =
+                normalizza(canzoneCorrente.title);
+
+
+            const artistaCorretto =
+                normalizza(canzoneCorrente.artist);
+
+
+            const titoloOk =
+                titoloInserito === titoloCorretto;
+
+
+            const artistaOk =
+                artistaInserito === artistaCorretto;
+
+
+            if (titoloOk) {
+                punti++;
+            }
+
+            if (artistaOk) {
+                punti++;
+            }
+
+
+            const risultato = document.getElementById(
+                "correct-result"
+            );
+
+
+            const messaggio = document.getElementById(
+                "score-message"
+            );
+
+
+            if (titoloOk && artistaOk) {
+
+                risultato.textContent =
+                    "🎉 TUTTO GIUSTO! 🎉";
+
+                messaggio.textContent =
+                    "Ma allora la conosci proprio! 🐈‍⬛💙";
+
+            } else if (titoloOk) {
+
+                risultato.textContent =
+                    "✨ TITOLO INDOVINATO!";
+
+                messaggio.textContent =
+                    "Il titolo era giusto! L'artista invece era un piccolo tranello 😼";
+
+            } else if (artistaOk) {
+
+                risultato.textContent =
+                    "✨ ARTISTA INDOVINATO!";
+
+                messaggio.textContent =
+                    "L'artista era giusto! Il titolo ti è sfuggito per un pelo 😼";
+
+            } else {
+
+                risultato.textContent =
+                    "💭 QUASI...";
+
+                messaggio.textContent =
+                    "Nessun problema! La prossima potrebbe essere proprio quella che riconosci al primo secondo 💙";
+
+            }
+
+
+            document.getElementById(
+                "correct-answer"
+            ).textContent =
+                canzoneCorrente.title +
+                " — " +
+                canzoneCorrente.artist;
+
+
+            revealBox.classList.add("mostra");
+
+
+            document.getElementById(
+                "confirm-button"
+            ).style.display = "none";
+
+
+            status.textContent =
+                "✨ Ecco la risposta!";
+
+
+            /* il disco continua a girare finché la canzone è in play */
+
+        }
+
+
+        /* =====================================================
+           PROSSIMA CANZONE
+        ===================================================== */
+
+        function nextSong() {
+
+            audio.pause();
+
+            audio.currentTime = 0;
+
+            disco.classList.remove("gira");
+
+            gatto.classList.remove("corri");
+
+
+            playButton.textContent = "▶ PLAY";
+
+            playButton.title = "Riproduci una canzone";
+
+
+            document.getElementById(
+                "confirm-button"
+            ).style.display = "inline-block";
+
+
+            revealBox.classList.remove("mostra");
+
+
+            canzoneCorrente = null;
+
+
+            /* se erano state fatte tutte le 14 */
+
+            if (numeroCanzone >= 14) {
+
+                gameArea.classList.remove("mostra");
+
+                document.getElementById(
+                    "audio-container"
+                ).style.display = "none";
+
+                status.textContent =
+                    "🎉 Hai completato tutte le canzoni!";
+
+
+                document.getElementById(
+                    "final-message"
+                ).textContent = messaggioFinale;
+
+
+                finale.classList.add("mostra");
+
+                return;
+            }
+
+
+            status.textContent =
+                "Pronta per la prossima? 🐈‍⬛";
+
+
+            /* porta la pagina leggermente verso il gioco */
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+
+
+        /* =====================================================
+           QUANDO LA CANZONE FINISCE
+        ===================================================== */
+
+        audio.addEventListener("ended", function() {
+
+            disco.classList.remove("gira");
+
+            gatto.classList.remove("corri");
+
+            playButton.textContent = "▶ PLAY";
+
+            playButton.title = "Riproduci la canzone";
+
+            status.textContent =
+                "🎵 La canzone è finita! Puoi ancora dare la tua risposta.";
+
+        });
+
+
+        audio.addEventListener("pause", function() {
+
+            disco.classList.remove("gira");
+
+            gatto.classList.remove("corri");
+
+            playButton.textContent = "▶ PLAY";
+
+            playButton.title = "Riproduci la canzone";
+
+        });
+
+    </script>
+
+</body>
+</html>
